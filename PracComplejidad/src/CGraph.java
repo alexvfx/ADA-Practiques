@@ -121,7 +121,6 @@ public class CGraph {
     // Dijkstra1 -------------------------------------------------------------------
     public void Dijkstra1(CVertex start) throws Exception {
     	int contNoVisitats = m_Vertices.size();
-    	double minDistance;
     	
       	for (int i=1; i<m_Vertices.size();++i) {
     		CVertex v=m_Vertices.get(i);
@@ -143,7 +142,7 @@ public class CGraph {
 			actual.m_Visit= true;
 			contNoVisitats--;
 			
-			minDistance = 99999999999999999999.9;
+			double minDistance = 999999999999.9;
 			for (int i=1; i<m_Vertices.size();++i) {
 	    		CVertex vertex =m_Vertices.get(i);
 	    		if (!vertex.m_Visit){
@@ -157,6 +156,31 @@ public class CGraph {
     }
     // Dijkstra2 -------------------------------------------------------------------
     public void Dijkstra2(CVertex start) throws Exception {
+    	int contNoVisitats = m_Vertices.size();
+		Comparator<CVertex> comparator = new CVertexComparator();
+		PriorityQueue<CVertex> queue = new PriorityQueue<CVertex>(contNoVisitats, comparator);
+      	for (int i=1; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+    		v.m_Distance = 9999999999.9;
+    		queue.add(v);
+      	}
+      	
+		CVertex actual =m_Vertices.get(0);
+		while(contNoVisitats>0){
+			for (int i=0; i<actual.m_Neighbords.size();++i) {
+	    		CVertex neighbord=actual.m_Neighbords.get(i);
+	    		if (!neighbord.m_Visit){
+	    			 double distance= actual.m_Distance + neighbord.m_Point.Sub(actual.m_Point).Module();
+	    			 if(distance<neighbord.m_Distance){
+	    				 neighbord.m_Distance = distance;
+	    			 }
+	    		}
+	      	}
+			
+			actual.m_Visit= true;
+			contNoVisitats--;
+			actual = queue.remove();
+		}
     }
     // PrintDistances ----------------------------------------------------------
     public void PrintDistances() throws Exception {
