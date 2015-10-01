@@ -30,28 +30,38 @@ public class CMain {
 		return false;
 	}
 	// RandomGraph -------------------------------------------------------------
-	public static CGraph RandomGraph(int nVertices,int nEdges) {
+	public static CGraph RandomGraph(int nVertices,int nEdges) throws Exception {
 		CGraph g=new CGraph();
 		CPoint[] vertices=new CPoint[nVertices];
 		for (int i=0; i<nVertices; ++i) {
-			double x=Math.round(Math.random()*1000);
-			double y=Math.round(Math.random()*1000);
+			double x,y;
+			boolean encontrado;
+			do {
+				x=Math.round(Math.random()*1000);
+				y=Math.round(Math.random()*1000);
+				encontrado=false;
+				for (int j=0; j<i;++j) {
+					if (vertices[j].m_X==x && vertices[j].m_Y==y ) {
+						encontrado=true;
+						break;
+					}
+				}
+			} while (encontrado);
 			vertices[i]=new CPoint(x,y);
 			int j=(int) (Math.random()*i);
 			g.Add(vertices[j].m_X,vertices[j].m_Y, x,y);
-			--nEdges;
+			if (i!=j) --nEdges;
 		}
 		while (nEdges>0) {
 			int i=(int) (Math.random()*nVertices);
 			int j=(int) (Math.random()*nVertices);
-			if (i!=j) {
+			if (i!=j && !g.GetVertex(vertices[i]).m_Neighbords.contains(g.GetVertex(vertices[j]))) {
 				g.Add(vertices[i].m_X,vertices[i].m_Y, vertices[j].m_X,vertices[j].m_Y);
+				--nEdges;				
 			}
-			--nEdges;				
 		}
 		return g;
-	}
-	
+	}	
 	// main --------------------------------------------------------------------
 	public static void main(String[] args) throws Exception
     {

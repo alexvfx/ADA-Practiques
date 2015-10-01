@@ -154,36 +154,9 @@ public class CGraph {
 	    		}
 	      	}
 		}
-				
-		
-    	
     }
     // Dijkstra2 -------------------------------------------------------------------
     public void Dijkstra2(CVertex start) throws Exception {
-    	int contNoVisitats = m_Vertices.size();
-    	double minDistance;
-    	
-      	for (int i=1; i<m_Vertices.size();++i) {
-    		CVertex v=m_Vertices.get(i);
-    		v.m_Distance = 9999999999.9;
-      	}
-      	
-		CVertex actual =m_Vertices.get(0);
-		while(contNoVisitats>0){
-			for (int i=0; i<actual.m_Neighbords.size();++i) {
-	    		CVertex neighbord=actual.m_Neighbords.get(i);
-	    		if (!neighbord.m_Visit){
-	    			 double distance= actual.m_Distance + neighbord.m_Point.Sub(actual.m_Point).Module();
-	    			 if(distance<neighbord.m_Distance){
-	    				 neighbord.m_Distance = distance;
-	    				 
-	    			 }
-	    		}
-	      	}
-			
-			actual.m_Visit= true;
-			contNoVisitats--;
-		}
     }
     // PrintDistances ----------------------------------------------------------
     public void PrintDistances() throws Exception {
