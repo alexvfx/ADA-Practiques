@@ -116,6 +116,8 @@ public class CMain {
 			CGraph graph=new CGraph();
 			graph.Read(graphFilename);
 			
+
+			graph = CMain.RandomGraph(200, 200);
 			m_View.ShowGraph(graph);			
 			
 			System.gc(); //garbage collector

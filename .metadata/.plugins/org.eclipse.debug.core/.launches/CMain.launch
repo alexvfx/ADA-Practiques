@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="CMain"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="AutoTest_1000_20000_Graph.txt"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="AutoTest_10_30_Graph.txt"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="PracComplejidad"/>
 </launchConfiguration>

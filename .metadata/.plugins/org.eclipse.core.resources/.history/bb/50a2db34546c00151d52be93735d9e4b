@@ -66,10 +66,10 @@ public class CMain {
 	public static void generarTaula(){
 		try {
 
-			System.out.println("Vertices\tEdges\ttDijkstra1\ttDijkstra2");
+			System.out.println("Vertices, Edges, tDijkstra1, tDijkstra2");
 			
-			for(int i=1;i<1000;i++){
-				CGraph graph = CMain.RandomGraph(i*10, i*20);					
+			for(int i=1;i<10;i++){
+				CGraph graph = CMain.RandomGraph(i*10, i*100);					
 				System.gc(); //garbage collector
 				long t0=System.nanoTime();
 				graph.Dijkstra1(graph.m_Vertices.get(0));
@@ -80,7 +80,7 @@ public class CMain {
 				graph.Dijkstra2(graph.m_Vertices.get(0));
 				t1=System.nanoTime();
 				double tDijkstra2 = (t1-t0)/1e9;
-				System.out.println(i*10+"\t"+i*20+"\t"+tDijkstra1+"\t"+tDijkstra2);
+				System.out.println(i+", "+i*10+", "+tDijkstra1+", "+tDijkstra2);
 			}
 		}
 		catch (Exception ex) {
@@ -116,6 +116,8 @@ public class CMain {
 			CGraph graph=new CGraph();
 			graph.Read(graphFilename);
 			
+
+			graph = CMain.RandomGraph(200, 200);
 			m_View.ShowGraph(graph);			
 			
 			System.gc(); //garbage collector

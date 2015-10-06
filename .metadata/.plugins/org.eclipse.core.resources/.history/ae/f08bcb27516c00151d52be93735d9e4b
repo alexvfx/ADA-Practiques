@@ -63,32 +63,6 @@ public class CMain {
 		return g;
 	}	
 	// main --------------------------------------------------------------------
-	public static void generarTaula(){
-		try {
-
-			System.out.println("Vertices\tEdges\ttDijkstra1\ttDijkstra2");
-			
-			for(int i=1;i<1000;i++){
-				CGraph graph = CMain.RandomGraph(i*10, i*20);					
-				System.gc(); //garbage collector
-				long t0=System.nanoTime();
-				graph.Dijkstra1(graph.m_Vertices.get(0));
-				long t1=System.nanoTime();
-				double tDijkstra1 = (t1-t0)/1e9;			
-				System.gc(); //garbage collector				
-				t0=System.nanoTime();
-				graph.Dijkstra2(graph.m_Vertices.get(0));
-				t1=System.nanoTime();
-				double tDijkstra2 = (t1-t0)/1e9;
-				System.out.println(i*10+"\t"+i*20+"\t"+tDijkstra1+"\t"+tDijkstra2);
-			}
-		}
-		catch (Exception ex) {
-			System.out.println("***EXCEPCION***");
-			System.out.println(ex.toString());
-			System.out.println(ex.getMessage());
-		}
-	}
 	public static void main(String[] args) throws Exception
     {
 		System.out.println(NIAAlumno1);
@@ -115,7 +89,6 @@ public class CMain {
 			System.out.println("Fichero de grafo: " + graphFilename);
 			CGraph graph=new CGraph();
 			graph.Read(graphFilename);
-			
 			m_View.ShowGraph(graph);			
 			
 			System.gc(); //garbage collector
@@ -134,12 +107,7 @@ public class CMain {
 			t1=System.nanoTime();
 			System.out.println("Dijkstra2:");
 			graph.PrintDistances();
-			System.out.println("TIME: " + (t1-t0)/1e9);
-
-			System.out.println("Taula:");
-			CMain.generarTaula();
-
-			System.out.println("fi");
+			System.out.println("TIME: " + (t1-t0)/1e9);			
 		}
 		catch (Exception ex) {
 			System.out.println("***EXCEPCION***");

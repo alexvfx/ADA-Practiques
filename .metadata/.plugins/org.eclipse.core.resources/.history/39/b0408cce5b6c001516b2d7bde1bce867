@@ -136,10 +136,10 @@ public class CMain {
 			graph.PrintDistances();
 			System.out.println("TIME: " + (t1-t0)/1e9);
 
-			System.out.println("Taula:");
-			CMain.generarTaula();
+			//System.out.println("Taula:");
+			//CMain.generarTaula();
 
-			System.out.println("fi");
+			//System.out.println("fi");
 		}
 		catch (Exception ex) {
 			System.out.println("***EXCEPCION***");
