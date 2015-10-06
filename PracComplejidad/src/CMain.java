@@ -89,13 +89,19 @@ public class CMain {
 			System.out.println("Fichero de grafo: " + graphFilename);
 			CGraph graph=new CGraph();
 			graph.Read(graphFilename);
-			m_View.ShowGraph(graph);
+			m_View.ShowGraph(graph);			
+			
+			System.gc(); //garbage collector
+			
 			long t0=System.nanoTime();
 			graph.Dijkstra1(graph.m_Vertices.get(0));
 			long t1=System.nanoTime();
 			System.out.println("Dijkstra1:");
 			graph.PrintDistances();
 			System.out.println("TIME: " + (t1-t0)/1e9);
+			
+			System.gc(); //garbage collector
+			
 			t0=System.nanoTime();
 			graph.Dijkstra2(graph.m_Vertices.get(0));
 			t1=System.nanoTime();

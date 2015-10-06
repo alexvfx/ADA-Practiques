@@ -156,30 +156,32 @@ public class CGraph {
     }
     // Dijkstra2 -------------------------------------------------------------------
     public void Dijkstra2(CVertex start) throws Exception {
-    	int contNoVisitats = m_Vertices.size();
-		Comparator<CVertex> comparator = new CVertexComparator();
-		PriorityQueue<CVertex> queue = new PriorityQueue<CVertex>(contNoVisitats, comparator);
       	for (int i=1; i<m_Vertices.size();++i) {
     		CVertex v=m_Vertices.get(i);
-    		v.m_Distance = 9999999999.9;
-    		queue.add(v);
+    		v.m_Visit = false;
+    		v.m_Distance = Double.POSITIVE_INFINITY;
       	}
-      	
-		CVertex actual =m_Vertices.get(0);
-		while(contNoVisitats>0){
+
+		PriorityQueue<CVertex> queue = new PriorityQueue<CVertex>(m_Vertices.size());
+		
+      	start.m_Distance=0;
+      	queue.add(start);
+		CVertex actual;
+		
+		while(!queue.isEmpty()){
+			actual = queue.remove();
+			actual.m_Visit= true;
+			
 			for (int i=0; i<actual.m_Neighbords.size();++i) {
 	    		CVertex neighbord=actual.m_Neighbords.get(i);
 	    		if (!neighbord.m_Visit){
 	    			 double distance= actual.m_Distance + neighbord.m_Point.Sub(actual.m_Point).Module();
 	    			 if(distance<neighbord.m_Distance){
 	    				 neighbord.m_Distance = distance;
+	    				 queue.add(neighbord);
 	    			 }
 	    		}
 	      	}
-			
-			actual.m_Visit= true;
-			contNoVisitats--;
-			actual = queue.remove();
 		}
     }
     // PrintDistances ----------------------------------------------------------

@@ -1,0 +1,209 @@
+import java.awt.*;
+import java.util.*;
+import java.io.*;
+//import java.util.Scanner;
+
+public class CGraph {
+	public ArrayList<CVertex> m_Vertices;
+	public CGraph() {
+		m_Vertices= new ArrayList<CVertex>();
+	}
+	public void Clear() {
+		m_Vertices.clear();
+	}
+	// Vertices ----------------------------------------------------------------
+	public CVertex FindVertex(double x,double y) {
+		for (int i=0; i<m_Vertices.size(); ++i) {
+			CVertex v=m_Vertices.get(i);
+			if (v.m_Point.m_X==x && v.m_Point.m_Y==y) return v;
+		}
+		return null;
+	}
+	public CVertex GetVertex(double x,double y) throws Exception {
+		CVertex v=FindVertex(x,y);
+		if (v==null) throw new Exception("El punto (" + x + "," + ") no pertenece al grafo");
+		return v;
+	}
+	public CVertex GetVertex(CPoint p) throws Exception {
+		return GetVertex(p.m_X,p.m_Y);
+	}
+	public boolean MemberP(CVertex v) {
+		return m_Vertices.contains(v);
+	}
+	// Edges -------------------------------------------------------------------
+	public void Add(double x1, double y1, double x2, double y2) {
+		CVertex p1=FindVertex(x1,y1);
+		if (p1==null) {
+			p1=new CVertex(x1,y1);
+			m_Vertices.add(p1);
+		}
+		CVertex p2=FindVertex(x2,y2);
+		if (p2==null) {
+			p2=new CVertex(x2,y2);
+			m_Vertices.add(p2);
+		}
+		if (!p1.m_Neighbords.contains(p2)) p1.m_Neighbords.add(p2);
+		if (!p2.m_Neighbords.contains(p1)) p2.m_Neighbords.add(p1);
+	}
+	// Draw --------------------------------------------------------------------
+	public void Draw(Graphics g,double esc) {
+		for (int i=0; i<m_Vertices.size(); ++i) {
+			CVertex p1=m_Vertices.get(i);
+			int x1=(int) Math.round(p1.m_Point.m_X*esc);
+			int y1=(int) Math.round(p1.m_Point.m_Y*esc);
+			if (i==0) g.setColor(new Color(255,0,0));
+			else g.setColor(new Color(0,200,128));
+			g.fillOval(x1-4, y1-4, 8, 8);
+			g.setColor(new Color(0,0,128));
+			for (Iterator<CVertex> iter=p1.m_Neighbords.descendingIterator();  iter.hasNext(); ) {
+				CPoint p2=iter.next().m_Point;
+				g.drawLine(x1,y1, (int) Math.round(p2.m_X*esc), (int) Math.round(p2.m_Y*esc));
+			}
+			g.setColor(new Color(0,128,0));
+			g.drawString("" + i,x1+10,y1-3);
+			if (p1.m_Visit) {
+				g.setColor(new Color(128,0,0));
+				g.drawString("" + String.format("%.2f", p1.m_Distance),x1+10,y1+9);
+			}
+		}
+	}
+	public void AddRectHull(CPoint min, CPoint max) {
+		for (int i=0; i<m_Vertices.size(); ++i) {
+			CPoint p=m_Vertices.get(i).m_Point;
+			if (p.m_X<min.m_X) min.m_X=p.m_X;
+			if (p.m_Y<min.m_Y) min.m_Y=p.m_Y;
+			if (p.m_X>max.m_X) max.m_X=p.m_X;
+			if (p.m_Y>max.m_Y) max.m_Y=p.m_Y;
+		}		
+	}
+	
+	// Files ----------------------------------------------------------------	
+    public void Write(String filename) throws Exception {
+    	File f=new File(filename);
+    	BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+    	bw.write("GRAPH\n");
+    	for (int i=0; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+			CPoint p1=v.m_Point;
+    		for (Iterator<CVertex> iter=v.m_Neighbords.iterator(); iter.hasNext();) {
+    			CPoint p2=iter.next().m_Point;
+    			bw.write(p1.m_X + " " + p1.m_Y + " " + p2.m_X + " " + p2.m_Y + "\n");
+    		}
+    	}
+    	bw.close();
+    }
+    public void Read(String filename) throws Exception {
+    	Clear();
+		File f=new File(filename);
+		Scanner s = new Scanner(f);
+		try {
+			String str=s.nextLine();
+			if (!str.equalsIgnoreCase("GRAPH")) throw new Exception(filename + " no tiene formato de fichero de grafos (" + str + ")");
+			// leer vértices
+			while (s.hasNextLine()) {
+				String linea = s.nextLine();
+				//System.out.println(linea);
+				Scanner sl = new Scanner(linea);
+				sl.useLocale(Locale.US);
+				double x1=sl.nextDouble();
+				double y1=sl.nextDouble();
+				double x2=sl.nextDouble();
+				double y2=sl.nextDouble();
+				sl.close();
+				Add(x1,y1,x2,y2);	
+			}
+		} 
+		finally {
+			s.close();
+		}
+    }
+    
+    // Dijkstra1 -------------------------------------------------------------------
+    public void Dijkstra1(CVertex start) throws Exception {
+    	int contNoVisitats = m_Vertices.size();
+    	
+      	for (int i=1; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+    		v.m_Distance = 9999999999.9;
+      	}
+      	
+		CVertex actual =m_Vertices.get(0);
+		while(contNoVisitats>0){
+			for (int i=0; i<actual.m_Neighbords.size();++i) {
+	    		CVertex neighbord=actual.m_Neighbords.get(i);
+	    		if (!neighbord.m_Visit){
+	    			 double distance= actual.m_Distance + neighbord.m_Point.Sub(actual.m_Point).Module();
+	    			 if(distance<neighbord.m_Distance){
+	    				 neighbord.m_Distance = distance;
+	    			 }
+	    		}
+	      	}
+			
+			actual.m_Visit= true;
+			contNoVisitats--;
+			
+			double minDistance = 999999999999.9;
+			for (int i=1; i<m_Vertices.size();++i) {
+	    		CVertex vertex =m_Vertices.get(i);
+	    		if (!vertex.m_Visit){
+	    			if(minDistance>vertex.m_Distance){
+	    				minDistance = vertex.m_Distance;
+	    				actual = vertex;
+	    			}
+	    		}
+	      	}
+		}
+    }
+    // Dijkstra2 -------------------------------------------------------------------
+    public void Dijkstra2(CVertex start) throws Exception {
+    	int contNoVisitats = m_Vertices.size();
+
+		PriorityQueue<CVertex> queue = new PriorityQueue<CVertex>(contNoVisitats);
+		
+      	for (int i=0; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+    		v.m_Distance = 9999999999.9;
+      	}
+      	start.m_Distance=0;
+      	queue.add(start);      	
+      	
+		CVertex actual =start;
+		
+		while(contNoVisitats>0){
+			for (int i=0; i<actual.m_Neighbords.size();++i) {
+	    		CVertex neighbord=actual.m_Neighbords.get(i);
+	    		if (!neighbord.m_Visit){
+	    			 double distance= actual.m_Distance + neighbord.m_Point.Sub(actual.m_Point).Module();
+	    			 if(distance<neighbord.m_Distance){
+	    				 neighbord.m_Distance = distance;
+	    			 }
+	    		}
+	      	}
+			
+			actual.m_Visit= true;
+			contNoVisitats--;
+			actual = queue.remove();
+			System.out.print(actual.m_Distance);
+		}
+    }
+    // PrintDistances ----------------------------------------------------------
+    public void PrintDistances() throws Exception {
+    	System.out.print("DISTANCES ");
+    	for (int i=0; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+    		System.out.print(i + ":" + v.m_Distance + " ");
+    	}
+    	System.out.println();
+    }
+    // WriteDistances ----------------------------------------------------------
+    public void WriteDistances(String filename) throws Exception {
+    	File f=new File(filename);
+    	BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+    	bw.write("DISTANCES\n");
+    	for (int i=0; i<m_Vertices.size();++i) {
+    		CVertex v=m_Vertices.get(i);
+    		bw.write(v.m_Distance + "\n");
+    	}
+    	bw.close();
+    }
+}
