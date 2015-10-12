@@ -128,6 +128,7 @@ public class CGraph {
     		v.m_Distance = Double.POSITIVE_INFINITY;
       	}
       	start.m_Distance=0;
+      	queue.add(start);
 		CVertex actual =start;
 		
 		while(contNoVisitats>0){
@@ -145,7 +146,7 @@ public class CGraph {
 			contNoVisitats--;
 			
 			double minDistance = Double.POSITIVE_INFINITY;
-			for (int i=0; i<m_Vertices.size();++i) {
+			for (int i=1; i<m_Vertices.size();++i) {
 	    		CVertex vertex =m_Vertices.get(i);
 	    		if (!vertex.m_Visit){
 	    			if(minDistance>vertex.m_Distance){

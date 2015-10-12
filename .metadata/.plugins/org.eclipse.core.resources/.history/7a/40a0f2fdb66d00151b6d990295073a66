@@ -62,17 +62,16 @@ public class CMain {
 		}
 		return g;
 	}	
-	
 	public static void generarTaula(){
 		try {
 
 			System.out.println("Vertices\tEdges\ttDijkstra1\ttDijkstra2");
-			int i,j;
-			for(i=5;i<1050;i+=10){
+			
+			for(int i=1;i<1000;i++){
 				CGraph graph = CMain.RandomGraph(i*10, i*20);
 				double tDijkstra1=0;
 				double tDijkstra2=0;
-				for (j=0; j<5; j++){
+				for (int j=0; j<5; j++){
 					System.gc(); //garbage collector
 					long t0=System.nanoTime();
 					graph.Dijkstra1(graph.m_Vertices.get(0));
@@ -83,8 +82,7 @@ public class CMain {
 					graph.Dijkstra2(graph.m_Vertices.get(0));
 					t1=System.nanoTime();
 					tDijkstra2 += (t1-t0)/1e9;
-				}
-				System.out.println(i*10+"\t"+i+20+"\t"+tDijkstra1/j+"\t"+tDijkstra2/j);
+				System.out.println(i*10+"\t"+i*20+"\t"+tDijkstra1/j+"\t"+tDijkstra2/j);
 			}
 		}
 		catch (Exception ex) {
@@ -140,7 +138,11 @@ public class CMain {
 			System.out.println("Dijkstra2:");
 			graph.PrintDistances();
 			System.out.println("TIME: " + (t1-t0)/1e9);
-			
+
+			System.out.println("Taula:");
+			CMain.generarTaula();
+
+			System.out.println("fi");
 		}
 		catch (Exception ex) {
 			System.out.println("***EXCEPCION***");
